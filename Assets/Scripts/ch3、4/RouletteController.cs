@@ -1,32 +1,57 @@
-using UnityEngine;
-using UnityEngine.UI;
+ï»¿using UnityEngine;
+using TMPro;
 
-public class RouletteController : MonoBehaviour
+public class Roulette : MonoBehaviour
 {
-    public string[] prizes = { "¤j¦N", "¤¤¦N", "¤p¦N", "¤j¥û" };
-    public Text res;
-    public GameObject effect; // ©ì¤J§Aªº¯S®Äª«¥ó (¦p·Ï¤õ©Î°{¥ú)
-    float speed = 0;
+    public Transform wheel;        // è¼ªç›¤
+    public TextMeshProUGUI resultText; // é¡¯ç¤ºçµæœ
 
-    void Update()
+    public string[] options =
     {
-        if (Input.GetMouseButtonDown(0) && speed < 0.1f)
+        "å…‡", "å¤§å‰", "å¤§å…‡", "å°å‰", "æœ«å‰", "ä¸­å‰"
+    };
+
+    bool isSpinning = false;
+
+    public void Spin()
+    {
+        if (!isSpinning)
         {
-            speed = Random.Range(20f, 30f);
-            if (effect) effect.SetActive(false); // ¶}©lÂà®ÉÃö³¬¯S®Ä
+            StartCoroutine(SpinWheel());
+        }
+    }
+
+    System.Collections.IEnumerator SpinWheel()
+    {
+        isSpinning = true;
+
+        float spinTime = 3f;
+        float speed = Random.Range(720f, 1080f);
+
+        float timer = 0;
+
+        while (timer < spinTime)
+        {
+            wheel.Rotate(0, 0, speed * Time.deltaTime);
+            timer += Time.deltaTime;
+            yield return null;
         }
 
-        transform.Rotate(0, 0, speed);
-        speed *= 0.985f;
+        ShowResult();
 
-        if (speed > 0 && speed < 0.05f)
-        {
-            speed = 0;
-            int i = Mathf.FloorToInt((360 - transform.eulerAngles.z) / (360f / prizes.Length)) % prizes.Length;
-            res.text = prizes[i];
+        isSpinning = false;
+    }
 
-            // §PÂ_ÃöÁä¦r¡G¦pªG¬O¤j¦N©Î¤j¥û¡A¶}±Ò¯S®Ä
-            if (prizes[i].Contains("¤j") && effect) effect.SetActive(true);
-        }
+    void ShowResult()
+    {
+        float angle = wheel.eulerAngles.z;
+
+        float sector = 360f / options.Length;
+
+        int index = Mathf.FloorToInt(angle / sector);
+
+        index = options.Length - 1 - index;
+
+        resultText.text = options[index];
     }
 }
