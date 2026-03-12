@@ -1,57 +1,52 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
-public class Roulette : MonoBehaviour
+public class RouletteController : MonoBehaviour
 {
-    public Transform wheel;        // 輪盤
-    public TextMeshProUGUI resultText; // 顯示結果
-
-    public string[] options =
+    float rotSpeed = 0;
+    public string[] prize = { "凶", "大吉", "大凶", "小吉", "末吉", "中吉" };
+    private float angle;
+    public TextMeshProUGUI resultText;
+    public GameObject image;
+    // Start is called before the first frame update
+    void Start()
     {
-        "兇", "大吉", "大兇", "小吉", "末吉", "中吉"
-    };
-
-    bool isSpinning = false;
-
-    public void Spin()
-    {
-        if (!isSpinning)
-        {
-            StartCoroutine(SpinWheel());
-        }
+        Application.targetFrameRate = 60;
+        angle = 360f / prize.Length;
     }
 
-    System.Collections.IEnumerator SpinWheel()
+    // Update is called once per frame
+    void Update()
     {
-        isSpinning = true;
-
-        float spinTime = 3f;
-        float speed = Random.Range(720f, 1080f);
-
-        float timer = 0;
-
-        while (timer < spinTime)
+        if (Input.GetMouseButton(0))
         {
-            wheel.Rotate(0, 0, speed * Time.deltaTime);
-            timer += Time.deltaTime;
-            yield return null;
+            this.rotSpeed = 10;
         }
+        transform.Rotate(0, 0, rotSpeed);
+        rotSpeed *= 0.98f;
+        float currentAngle = transform.eulerAngles.z;
+        float adjustedAngle = (currentAngle + 90f) % 360f;
+        int index = Mathf.FloorToInt(adjustedAngle / angle);
+        //Debug.Log(transform.eulerAngles.z);
+        string finalPrize = "";
+        //if ()
+        //{
+        finalPrize = prize[(index - 1 + 6) % 6];
+        //}
+        if((index - 1 + 6) % 6==1 && rotSpeed<=0.5)
+        {
+            image.transform.position = new Vector3(0, 0, image.transform.position.z);
+        }
+        else
+        {
+            image.transform.position = new Vector3(100, 100, image.transform.position.z);
 
-        ShowResult();
+        }
+        resultText.text = "結果:" + finalPrize;
 
-        isSpinning = false;
-    }
-
-    void ShowResult()
-    {
-        float angle = wheel.eulerAngles.z;
-
-        float sector = 360f / options.Length;
-
-        int index = Mathf.FloorToInt(angle / sector);
-
-        index = options.Length - 1 - index;
-
-        resultText.text = options[index];
     }
 }
