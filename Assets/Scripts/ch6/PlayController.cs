@@ -36,26 +36,43 @@ public class PlayController : MonoBehaviour
         float speedx = Mathf.Abs(this.rigid2D.velocity.x);
 
         //速度上限
-        if(speedx < this.maxWalkSpeed)
+        if (speedx < this.maxWalkSpeed)
         {
             this.rigid2D.AddForce(transform.right * key * this.walkForce);
         }
 
         //隨移動方向
-        if(key != 0)
+        if (key != 0)
         {
             transform.localScale = new Vector3(key, 1, 1);
         }
 
         this.animator.speed = speedx / 2.0f;
         Vector3 screenPos = Camera.main.WorldToViewportPoint(transform.position);
-        
 
-        // 判斷是否超出邊界 (左右 < 0 或 > 1，上下 < 0 或 > 1)
-        if (screenPos.x < 0f || screenPos.x > 1f || screenPos.y < 0f || screenPos.y > 1f)
+
+        if (transform.position.y < -10f)
         {
-            transform.position = new Vector3(-0.1f,0.03f, 0);
+            Respawn();
+        }
+        void Respawn()
+        {
+            // 1. 回到重生點
+            transform.position = new Vector3(-0.1f, -4.5f, 0f);
+
+            // 2. 如果主角有掛載 Rigidbody (剛體)，需要把掉落的速度歸零
+            // 否則重生後可能會因為殘留的重力加速度瞬間往下噴
+            Rigidbody rb = GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.velocity = Vector3.zero;
+            }
         }
 
+
+    }
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log("終點");
     }
 }
