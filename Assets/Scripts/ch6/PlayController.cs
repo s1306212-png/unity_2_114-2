@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+
 
 public class PlayController : MonoBehaviour
 {
@@ -22,7 +24,7 @@ public class PlayController : MonoBehaviour
     void Update()
     {
         //¸õÅD
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space)&&this.rigid2D.velocity.y == 0)
         {
             this.rigid2D.AddForce(transform.up * this.jumpForce);
         }
@@ -74,5 +76,6 @@ public class PlayController : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log("²×ÂI");
-    }
+        SceneManager.LoadScene("ClearScene");   
+    } 
 }
