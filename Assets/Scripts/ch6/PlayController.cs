@@ -76,6 +76,6 @@ public class PlayController : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log("²×ÂI");
-        SceneManager.LoadScene("ClearScene");   
+        SceneManager.LoadScene("ch6_END");   
     } 
 }

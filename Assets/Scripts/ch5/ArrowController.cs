@@ -23,7 +23,7 @@ public class ArrowController : MonoBehaviour
         Vector2 p2= p.transform.position;
         Vector2 dir = p1 - p2;
         float d=dir.magnitude;
-        float r1 = 1.0f;
+        float r1 = 0.5f;
         float r2 = 1.0f;
         if (d < r1 + r2)
         {

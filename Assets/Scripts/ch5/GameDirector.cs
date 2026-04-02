@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameDirector : MonoBehaviour
@@ -20,5 +22,9 @@ public class GameDirector : MonoBehaviour
     public void DecHp()
     {
         hp.GetComponent<Image>().fillAmount -= 0.1f;
+        if((hp.GetComponent<Image>().fillAmount <= 0))
+        {
+            SceneManager.LoadScene("ch5_END");
+        }
     }
 }
