@@ -9,8 +9,20 @@ public class Ball : MonoBehaviour
     public float maxSpeed = Mathf.Infinity;
     public float currentSpeed { get; set; }
 
-    // 【新增】球速增加的倍率，預設設為 1.1 (即每次增加 10% 速度)
+    // 【新增】球速增加的倍率，預設設為 1.01 (即每次增加 1% 速度)
     public float speedMultiplier = 1.01f;
+
+    public void RunTaskA()
+    {
+        // 確保 Rigidbody2D 已被初始化
+        if (rb == null)
+        {
+            Awake();
+        }
+
+        ResetPosition();
+        AddStartingForce();
+    }
 
     private void Awake()
     {
@@ -19,6 +31,9 @@ public class Ball : MonoBehaviour
 
     public void ResetPosition()
     {
+        // 確保剛體存在
+        if (rb == null) rb = GetComponent<Rigidbody2D>();
+
         rb.velocity = Vector2.zero;
         rb.position = Vector2.zero;
     }
@@ -44,9 +59,12 @@ public class Ball : MonoBehaviour
     private void FixedUpdate()
     {
         // Clamp the velocity of the ball to the max speed
-        Vector2 direction = rb.velocity.normalized;
-        currentSpeed = Mathf.Min(currentSpeed, maxSpeed);
-        rb.velocity = direction * currentSpeed;
+        if (rb != null)
+        {
+            Vector2 direction = rb.velocity.normalized;
+            currentSpeed = Mathf.Min(currentSpeed, maxSpeed);
+            rb.velocity = direction * currentSpeed;
+        }
     }
 
     // 【新增】處理碰撞事件：當撞擊到球拍時增加球速

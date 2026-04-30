@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+
 
 [DefaultExecutionOrder(-1)]
 public class GameManager : MonoBehaviour
@@ -22,6 +24,9 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R)) {
             NewGame();
+        }
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            SceneManager.LoadScene("PongMenu");
         }
     }
 
